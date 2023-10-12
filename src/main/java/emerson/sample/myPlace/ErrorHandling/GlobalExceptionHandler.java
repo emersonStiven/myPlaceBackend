@@ -21,5 +21,9 @@ public class GlobalExceptionHandler {
     public ResponseEntity<?> handleException(UnsatisfiedDependencyException exc){
         return ResponseEntity.status(500).body(exc.getMessage());
     }
+    @ExceptionHandler(EmailAlreadyExistException.class)
+    public ResponseEntity<?> handleException(EmailAlreadyExistException exc){
+        return ResponseEntity.status(407).body(exc.getMessage());
+    }
 
 }
