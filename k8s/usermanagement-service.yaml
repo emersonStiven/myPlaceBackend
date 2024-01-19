@@ -1,0 +1,57 @@
+apiVersion: apps/v1 
+kind: Deployment 
+metadata:
+  name: usermanagement-deployment
+  labels: 
+    app: usermanagement-service 
+spec: 
+  replicas: 2
+  selector: 
+    matchLabels: 
+      app: usermanagement-service
+  template: 
+    metadata: 
+      labels:
+        app: usermanagement-service
+    spec: 
+      containers: 
+      - name: usermanagement-microservice
+        image: usermanagement-image
+        ports:
+          - containerPort: 9090
+        env: 
+        - name: AUTHORIZATION_SERVER_ISSUER_URI
+          valueFrom:
+            configMapKeyRef:
+              name: myplace-configmap
+              key: authserver-issuer-url
+        - name: MYSQL_DB_URL
+          valueFrom:
+          configMapKeyRef:
+            name: myplace-configmap
+            key: usermanagement-db-url
+        - name: MYSQL_AUTH_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: myplace-secrets
+              key: mysql-root-username
+        - name: MYSQL_AUTH_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: myplace-secrets
+              key: mysql-root-password
+
+---
+apiVersion: v1 
+kind: Service 
+metadata: 
+  name: usermanagement-service-balancer
+spec:
+  selector: 
+    app: usermanagement-service
+    ports:
+      - protocol: TCP
+        port: 9090
+        targetPort: 9090
+
+

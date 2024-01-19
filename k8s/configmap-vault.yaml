@@ -1,0 +1,8 @@
+apiVersion: v1 
+kind: ConfigMap
+metadata: 
+  name: myplace-configmap
+data: 
+  usermanagement-db-url: jdbc:mysql://localhost:3306/user_management
+  authserver-issuer-url: http://localhost:9001
+  

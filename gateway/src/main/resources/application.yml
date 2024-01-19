@@ -1,0 +1,129 @@
+
+server:
+  port: 8080
+
+logging:
+  level:
+    root: INFO
+    org.springframework.security: INFO
+    org.springframework.security.oauth2: INFO
+    org.springframework.cloud.gateway: TRACE
+
+
+
+spring:
+  application:
+    name: edge-service
+  security:
+    oauth2:
+      client:
+        registration:
+          api-client-oidc:
+            provider: spring
+            client-id: api-client
+            client-secret: secret
+            authorization-grant-type: authorization_code
+            redirect-uri:
+              - "http://localhost:8080/login/oauth2/code/{registrationId}"
+              - "http://localhost:8080/authorized"
+            scope:
+              - openid
+              - api.read
+            client-name: api-client-oidc
+        provider:
+          spring:
+            issuer-uri: http://localhost:9001
+
+  cloud:
+    gateway:
+      globalcors:
+        add-to-simple-url-handler-mapping: true
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin Access-Control-Request-Headers
+        - TokenRelay
+      routes:
+        - id: property-service-get-1
+          uri: http://localhost:8082
+          predicates:
+            - Path=/property-app/api/v1-crud/preview-listings
+            - Method=GET
+            - Query=page, size, sortby, sortorder
+        - id: property-service-testEndpoint
+          uri: http://localhost:8082
+          predicates:
+            - Path= /property-app/api/v1-crud/fetchAllListings
+            - Method=GET
+        - id: property-service-get-2
+          uri: http://localhost:8082
+          predicates:
+            - Path=/property-app/api/v1-crud/retrieve-listing/**
+            - Method=GET
+        - id: property-service-get-3
+          uri: http://localhost:8082
+          predicates:
+            - Path=/property-app/api/v1-crud/host-listings
+            - Method=GET
+        - id: property-service-post-1
+          uri: http://localhost:8082
+          predicates:
+            - Path=/property-app/api/v1-crud/create-listing
+            - Method=POST
+        - id: property-service-put-1
+          uri: http://localhost:8082
+          predicates:
+            - Path=/property-app/api/v1-crud/update-listing/**
+            - Method=PUT
+        - id: property-service-delete-1
+          uri: http://localhost:8082
+          predicates:
+            - Path=/property-app/api/v1-crud/delete-host-listings
+            - Method=DELETE
+        - id: property-service-delete-2
+          uri: http://localhost:8082
+          predicates:
+            - Path=/property-app/api/v1-crud/delete-listing/**
+            - Method=DELETE
+
+
+        - id: user-management-post1
+          uri: http://localhost:9090
+          predicates:
+            - Path=/user-management/api/v1/account/verify-person
+            - Method=POST
+        - id: user-management-post2
+          uri: http://localhost:9090
+          predicates:
+            - Path=/user-management/api/v1/account/change-pass
+            - Method=POST
+        - id: user-management-get1
+          uri: http://localhost:9090
+          predicates:
+            - Path=/user-management/api/v1/account/email-check
+            - Method=GET
+            - Query=email
+        - id: user-management
+          uri: http://localhost:9090
+          predicates:
+            - Path=/user-management/api/v1/account/retrieve-user
+            - Method=GET
+        - id: user-management-post3
+          uri: http://localhost:9090
+          predicates:
+            - Path=/user-management/api/v1/account/create-user
+            - Method=POST
+        - id: user-management-put1
+          uri: http://localhost:9090
+          predicates:
+            - Path=/user-management/api/v1/account/update-account
+            - Method=PUT
+        - id: user-management-delete1
+          uri: http://localhost:9090
+          predicates:
+            - Path=/user-management/api/v1/account/delete-user
+            - Method=DELETE
+
+
+
+
+
+

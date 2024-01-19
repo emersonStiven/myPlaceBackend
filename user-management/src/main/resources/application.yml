@@ -1,0 +1,48 @@
+#jwt:
+ # auth:
+  #  converter:
+   #   principal-attribute: preferred_username
+    #  resource-id: myplace-client-api-rest
+
+logging:
+  level:
+    root: TRACE
+    org.springframework.security: TRACE
+    org.springframework.security.oauth2 : TRACE
+
+server:
+  port: 9090
+  servlet:
+    context-path: /user-management/api
+
+spring:
+  application:
+    name: property-service
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/user_management
+    username: root
+    password: Germany1#
+    hikari:
+      maximum-pool-size: 5
+  jpa:
+    properties:
+      dialect: org.hibernate.dialect.MySQLDialect
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+  security:
+    oauth2:
+      resource-server:
+        jwt:
+          issuer-uri: http://localhost:9001
+
+
+
+
+
+
+
+
+
+

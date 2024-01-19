@@ -1,0 +1,42 @@
+spring:
+  application:
+    name: property-service
+  datasource:
+    username: root
+    password: Germany1#
+    url: jdbc:mysql://localhost:3306/property_management
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: create
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:9001
+  #data:
+    #redis:
+      #host: localhost
+      #port: 6379
+      #timeout: 1000
+  #cache:
+    #type: REDIS
+    #redis:
+      #cache-null-values: false
+      #key-prefix: property   #object to be attached alongside the id property1231231
+      #use-key-prefix: true #specify what is the prefix
+      #time-to-live: 60000 #data stored for 1 minute
+
+logging:
+  level:
+    root: INFO
+
+
+server:
+  port: 8082
+  servlet:
+    context-path: /property-app/api
+
+
+
+
